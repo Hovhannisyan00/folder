@@ -1,14 +1,25 @@
-import { ProductItem } from "./ProductItem"
+import { useContext } from "react";
+import { ProductItem } from "./ProductItem";
+import { ProductContext } from "../Context";
 
-export const ProductList = ({items, onMove}) => {
+export const ProductList = () => {
+    const { state: { products }, dispatch } = useContext(ProductContext);
+
+    const moveToCart = id => {
+        dispatch({ type: "ADD_TO_CART", payload: id });
+    };
+
     return (
-        <div>
-            <h3>ProductList</h3>
-            <div className="list">
-                {
-                    items.map(item => <ProductItem key={item.id} {...item} onMove={onMove}/>)
-                }
-            </div>
+        <div className="list">
+            {
+                products.map(product => (
+                    <ProductItem
+                        key={product.id}
+                        {...product}
+                        onMove={moveToCart}
+                    />
+                ))
+            }
         </div>
-    )
-}
+    );
+};

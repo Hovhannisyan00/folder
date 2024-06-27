@@ -1,16 +1,20 @@
-export const BasketItem = ({id, title, price, count, hide, onAddCount, onRemoveCount, onRemoveItem}) => {
+import { useContext } from "react";
+import { ProductContext } from "../Context";
+
+export const BasketItem = ({ id, title, price, count }) => {
+
+    const { dispatch } = useContext(ProductContext);
 
     return (
         <tr>
             <td>{title}</td>
-            <td>{`${price}USD`}</td>
+            <td>{price} USD</td>
             <td>{count}</td>
-            <td>{`${hide ? price*(count-1) : price * count} USD`}</td>
-            <td style={{display: 'flex', gap: '10px'}}>
-                <button onClick={() => onAddCount(id)}>+</button>
-                <button onClick={() => onRemoveCount(id)}>-</button>
-                <button onClick={() => onRemoveItem(id)}>x</button>
+            <td>
+                <button onClick={() => dispatch({ type: "COUNT_UP", payload: id })}>+</button>
+                <button onClick={() => dispatch({ type: "COUNT_DOWN", payload: id })}>-</button>
+                <button onClick={() => dispatch({ type: "DELETE", payload: id })}>Remove</button>
             </td>
         </tr>
-    )
-}
+    );
+};

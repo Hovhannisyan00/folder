@@ -1,42 +1,43 @@
-import { useState } from "react"
-import { BasketItem } from "./BasketItem"
+import { useContext } from "react";
+import { BasketItem } from "./BasketItem";
+import { ProductContext } from "../Context";
 
-export const Basket = ({items, onAddCount, onRemoveCount, onRemoveItem, onCheck, hide=false}) => {
+export const Basket = () => {
+    const { state: { basket }, dispatch } = useContext(ProductContext);
+
+    const calculateTotal = () => {
+        return basket.reduce((acc, item) => acc + item.price * item.count, 0);
+    };
 
     return (
         <div>
-            <h3>Basket</h3>
-            {items.length ?
-            <>
-                {/* <button className={`${hide ? 'hide' : ''}`} onClick={onCheck}>Sale</button> */}
-                <br />
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Count</th>
-                            <th>SubTotal</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            items?.map(item =>
+            <h2>Basket</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        basket.map(item => (
                             <BasketItem
                                 key={item.id}
-                                onAddCount={onAddCount}
-                                onRemoveCount={onRemoveCount}
-                                onRemoveItem={onRemoveItem}
-                                hide={hide}
                                 {...item}
-                            />)
-                        }
-                    </tbody>
-                </table>
-            </>
-            : "You have no item"}
+                            />
+                        ))
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan="3">Total</td>
+                        <td>{calculateTotal()} USD</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-    )
-}
+    );
+};
